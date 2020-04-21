@@ -1,7 +1,34 @@
 <?php
+$currentCookieParams = session_get_cookie_params();
 
-// Start a session cookie to store in the browser info about current status
+$rootDomain = '.dmessages.app';
+$expiresAt = time() + 604800;
+$secureCookie = true;
+
+session_set_cookie_params(
+    $expiresAt,
+    "/",
+    $rootDomain,
+    $secureCookie
+);
+
+session_name('APISESSION');
 session_start();
+
+setcookie('APISESSION', session_id(), $expiresAt, '/', $rootDomain);
+
+// Fix CORS
+if (isset($_SERVER['HTTP_ORIGIN'])) {
+    // Decide if the origin in $_SERVER['HTTP_ORIGIN'] is one
+    // you want to allow, and if so:
+    $host_names = explode(".", $_SERVER["HTTP_ORIGIN"]);
+    if ($host_names[count($host_names)-2] . "." . $host_names[count($host_names)-1] == "dmessages.app") {
+        header("Access-Control-Allow-Origin: $_SERVER[HTTP_ORIGIN]");
+        header('Access-Control-Allow-Credentials: true');
+        header('Access-Control-Max-Age: 0');    // cache for 1 day
+    }
+}
+
 if (isset($_GET["user"])) {
     if (isset($_SESSION["challenge_answer"]) and isset($_SESSION["challenge_question"]) and isset($_SESSION["challenge_user"]) and $_SESSION["challenge_user"] == $_GET["user"]) {
         header("Content-Type: application/json");
