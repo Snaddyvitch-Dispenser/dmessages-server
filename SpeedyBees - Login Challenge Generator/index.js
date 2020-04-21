@@ -7,17 +7,18 @@ app.use(express.urlencoded({extended: true}));
 app.use(express.json({strict: false}))
 
 app.post("/get_message", (req, res) => {
+  
   var data = req.body;
 
-  // If user's name is set
-  if ('name' in data) {
+  // If user's name, app and author are set
+  if ('name' in data && 'app' in data && 'author' in data) {
     // Get account from hive network (to get their keys for login)
     hive.api.getAccounts([data.name], function(err, result) {
       // If account is found
       if (0 in result) {
         if (result[0].memo_key.length == 53) {
           // Generate a challenge for the user, which requires them to decrypt with their memo key to prove ownership of their account
-          var login_proof = "#I, " + data.name + ", a user of the hive blockchain wish to sign in to the 'hive chat' application made by cadawg. Please log me into this session with the random value of " + crypto.randomBytes(20).toString('hex');
+          var login_proof = "#I, " + data.name + ", a user of the hive blockchain wish to sign in to the '" + data.app  + "' application made by '" + data.author + "'. Please log me into this session with the random value of " + crypto.$
           var encrypted_proof = hive.memo.encode("5HvKXFUp6USSLMAy7pPcJ83qZLk83hBE1WvKnR5TE4YJKtPw4rQ", result[0].memo_key, login_proof);
 
           res.json({"success": true, "data": {"user": data.name, "challenge": encrypted_proof, "answer": login_proof}});
