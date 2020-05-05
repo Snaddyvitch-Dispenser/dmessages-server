@@ -1,0 +1,25 @@
+{
+  "name": "dmessages-server",
+  "version": "1.0.0",
+  "description": "dMessages Backend Server",
+  "main": "chat-server.js",
+  "dependencies": {
+    "dsteem": "^0.11.3",
+    "mysql": "^2.18.1",
+    "websocket": "^1.0.31"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Snaddyvitch-Dispenser/steem-chat-app-bits.git"
+  },
+  "author": "Snaddyvitch-Dispenser <lol@peoplewhothinktheyaregettingmy.email> (https://steem.tools)",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/Snaddyvitch-Dispenser/steem-chat-app-bits/issues"
+  },
+  "homepage": "https://github.com/Snaddyvitch-Dispenser/steem-chat-app-bits#readme"
+}
