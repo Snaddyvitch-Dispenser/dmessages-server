@@ -13,41 +13,47 @@ const { Client, Signature, cryptoUtils } = require('dsteem');
 
 const hiveClient = new Client('https://anyx.io');
 
-var dbConnection = mysql.createConnection({
+var dbPool = mysql.createPool({
+    connectionLimit: 100,
     host: "localhost",
     user: "root",
     password: "",
     database: "dmessages"
 });
 
-dbConnection.connect(function(err) {
-    if (err) throw err;
-    console.log((new Date()) + ": Database Connected!");
+// Test database is up
+dbPool.getConnection(function(err, dbConnection) {
+    if (err) throw err; // Throw the error as the database is probably turned off
+    console.log((new Date()) + ": Database Pool Connected");
+    dbConnection.release();
 });
 
 // All messages (as server is shared), allows for reduced querying (only one select at the program startup, making it more efficient)
 var history = [ ];
 // list of currently connected users
 var clients = [ ];
-
-dbConnection.query("SELECT * FROM `messages`", function(err, result, fields) {
-    if (err) throw err; // If an error happens here, crash the app because we're going to have a lot more problems if we don't solve it
-    for (var i=0; i < result.length; i++) { 
-        var db_msg = {
-            from: result[i]._from,
-            to: result[i]._to,
-            content: result[i]._content,
-            app: result[i]._app,
-            extensions: result[i]._extensions,
-            raw_data: result[i]._raw_data,
-            signature: result[i]._signature,
-            signed_data: result[i]._signed_data,
-            type: result[i]._type,
-            format: result[i]._format,
-            timestamp: result[i]._timestamp
-        };
-        history.push(db_msg);
-    }
+dbPool.getConnection(function(err, dbConnection){
+    if (err) throw err; // Throw it here because this is startup so the user will be monitoring to see that everything has connected
+    dbConnection.query("SELECT * FROM `messages`", function(err, result, fields) {
+        if (err) throw err; // If an error happens here, crash the app because it means the table has not been created
+        for (var i=0; i < result.length; i++) { 
+            var db_msg = {
+                from: result[i]._from,
+                to: result[i]._to,
+                content: result[i]._content,
+                app: result[i]._app,
+                extensions: result[i]._extensions,
+                raw_data: result[i]._raw_data,
+                signature: result[i]._signature,
+                signed_data: result[i]._signed_data,
+                type: result[i]._type,
+                format: result[i]._format,
+                timestamp: result[i]._timestamp
+            };
+            history.push(db_msg);
+        }
+    });
+    dbConnection.release();
 });
 
 // For escaping unsafe messages
@@ -174,9 +180,12 @@ wsServer.on('request', (request) => {
                                         format: parsed_data.format,
                                         timestamp: timestamp_recieved
                                     };
-
-                                    dbConnection.query('INSERT INTO `messages` (`_from`, `_to`, `_content`, `_app`, `_extensions`, `_raw_data`, `_signature`, `_signed_data`, `_type`, `_format`, `_timestamp`) VALUES (?,?,?,?,?,?,?,?,?,?,?)', [msg.from, msg.to, msg.content, msg.app, JSON.stringify(msg.extensions), JSON.stringify(JSON.parse(msg.raw_data)),msg.signature, msg.signed_data, msg.type, msg.format, msg.timestamp], function (error, results, fields) {
-                                        if (error) console.log((new Date()) + ": Error pushing message to database. Message: " + JSON.stringify(msg) + " | Error: "+ error.toString());
+                                    dbPool.getConnection(function(err, dbConnection) {
+                                        if (err) console.log((new Date()) + ": Failed to get connection to insert message. Data: " + JSON.stringify(msg));
+                                        dbConnection.query('INSERT INTO `messages` (`_from`, `_to`, `_content`, `_app`, `_extensions`, `_raw_data`, `_signature`, `_signed_data`, `_type`, `_format`, `_timestamp`) VALUES (?,?,?,?,?,?,?,?,?,?,?)', [msg.from, msg.to, msg.content, msg.app, JSON.stringify(msg.extensions), JSON.stringify(JSON.parse(msg.raw_data)),msg.signature, msg.signed_data, msg.type, msg.format, msg.timestamp], function (error, results, fields) {
+                                            if (error) console.log((new Date()) + ": Error pushing message to database. Data: " + JSON.stringify(msg));
+                                        });
+                                        dbConnection.release();
                                     });
 
                                     console.log((new Date()) + ": [@" + msg.from + " -> @" + msg.to + "] " + parsed_data.content);
@@ -215,8 +224,12 @@ wsServer.on('request', (request) => {
                                         timestamp: timestamp_recieved
                                     };
 
-                                    dbConnection.query('INSERT INTO `messages` (`_from`, `_to`, `_content`, `_app`, `_extensions`, `_raw_data`, `_signature`, `_signed_data`, `_type`, `_format`, `_timestamp`) VALUES (?,?,?,?,?,?,?,?,?,?,?)', [msg.from, msg.to, msg.content, msg.app, JSON.stringify(msg.extensions), JSON.stringify(JSON.parse(msg.raw_data)),msg.signature, msg.signed_data, msg.type, msg.format, msg.timestamp], function (error, results, fields) {
-                                        if (error) console.log((new Date()) + ": Error pushing message to database. Message: " + JSON.stringify(msg) + " | Error: "+ error.toString());
+                                    dbPool.getConnection(function(err, dbConnection) {
+                                        if (err) console.log((new Date()) + ": Failed to get connection to insert message. Data: " + JSON.stringify(msg));
+                                        dbConnection.query('INSERT INTO `messages` (`_from`, `_to`, `_content`, `_app`, `_extensions`, `_raw_data`, `_signature`, `_signed_data`, `_type`, `_format`, `_timestamp`) VALUES (?,?,?,?,?,?,?,?,?,?,?)', [msg.from, msg.to, msg.content, msg.app, JSON.stringify(msg.extensions), JSON.stringify(JSON.parse(msg.raw_data)),msg.signature, msg.signed_data, msg.type, msg.format, msg.timestamp], function (error, results, fields) {
+                                            if (error) console.log((new Date()) + ": Error pushing message to database. Data: " + JSON.stringify(msg));
+                                        });
+                                        dbConnection.release();
                                     });
 
                                     console.log((new Date()) + ": [@" + msg.from + " -> #" + msg.to + "] " + parsed_data.content);
