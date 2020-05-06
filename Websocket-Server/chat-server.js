@@ -18,7 +18,8 @@ var dbPool = mysql.createPool({
     host: "localhost",
     user: "root",
     password: "",
-    database: "dmessages"
+    database: "dmessages",
+    charset: "utf8mb4"
 });
 
 // Test database is up
