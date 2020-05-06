@@ -176,7 +176,7 @@ wsServer.on('request', (request) => {
                                         raw_data: stripWhitespace(message.utf8Data),
                                         signature: parsed_message.signature,
                                         signed_data: parsed_message.data,
-                                        type: "channel",
+                                        type: "private",
                                         format: parsed_data.format,
                                         timestamp: timestamp_recieved
                                     };
