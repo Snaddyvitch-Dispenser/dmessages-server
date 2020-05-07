@@ -57,13 +57,6 @@ dbPool.getConnection(function(err, dbConnection){
     dbConnection.release();
 });
 
-// For escaping unsafe messages
-function htmlEntities(str) {
-    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;')
-                      .replace(/>/g, '&gt;').replace(/"/g, '&quot;')
-                      .replace(/'/g, '&#39;');
-}
-
 function stripWhitespace(str) {
     return String(str).replace(/(^\s+|\s+$)/g, "");
 }
@@ -171,7 +164,7 @@ wsServer.on('request', (request) => {
                                     var msg = {
                                         from: parsed_message.name,
                                         to: parsed_data.to,
-                                        content: htmlEntities(parsed_data.content),
+                                        content: parsed_data.content,
                                         app: parsed_data.app,
                                         extensions: parsed_data.extensions,
                                         raw_data: stripWhitespace(message.utf8Data),
@@ -214,7 +207,7 @@ wsServer.on('request', (request) => {
                                     var msg = {
                                         from: parsed_message.name,
                                         to: parsed_data.to,
-                                        content: htmlEntities(parsed_data.content),
+                                        content: parsed_data.content,
                                         app: parsed_data.app,
                                         extensions: parsed_data.extensions,
                                         raw_data: stripWhitespace(message.utf8Data),
