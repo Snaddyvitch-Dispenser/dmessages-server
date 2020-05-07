@@ -85,7 +85,7 @@ wsServer.on('request', (request) => {
     console.log((new Date()) + ': Connection from origin ' + request.origin + '.');
 
     // accept connection if it's a known origin
-    if (["api.dmessages.app","dmessages.app","demo1.dmessages.app","www.dmessages.app","postwoman.io"].indexOf(request.origin.replace(/^https?:\/\//, "")) > -1) {
+    if (["api.dmessages.app","dmessages.app","demo1.dmessages.app","www.dmessages.app","postwoman.io","localhost:3000"].indexOf(request.origin.replace(/^https?:\/\//, "")) > -1) {
         var connection = request.accept(null, request.origin);
         console.log((new Date()) + ": Connection from origin " + request.origin + " was accepted.");
     } else {
