@@ -29,10 +29,14 @@ setcookie($config->cookies->session->name, session_id(), $config->cookies->sessi
 if (isset($_SERVER['HTTP_ORIGIN'])) {
     // Split Host Name into portions
     $host_names = explode(".", $_SERVER["HTTP_ORIGIN"]);
-    $host_domain = $host_names[count($host_names)-2] . "." . $host_names[count($host_names)-1];
+    if (sizeof($host_names) > 1) {
+        $host_domain = $host_names[count($host_names)-2] . "." . $host_names[count($host_names)-1];
+    } else {
+        $host_domain = $_SERVER["HTTP_ORIGIN"];
+    }
 
     // Get domain and check if it's ours
-    if ($host_domain === $config->app->domain or $host_domain === "localhost" or $host_domain === "localhost:3000") {
+    if ($host_domain === $config->app->domain or $host_domain === "http://localhost:3000") {
         // Set CORS headers so browsers can access this page.
         header("Access-Control-Allow-Origin: $_SERVER[HTTP_ORIGIN]");
         header('Access-Control-Allow-Credentials: true');
