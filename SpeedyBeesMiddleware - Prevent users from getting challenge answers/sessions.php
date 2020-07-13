@@ -23,7 +23,14 @@ session_name($config->cookies->session->name);
 session_start();
 
 // Set session cookie with correct timings
-setcookie($config->cookies->session->name, session_id(), $config->cookies->session->expiry, $config->cookies->path, $config->cookies->domain);
+setcookie($config->cookies->session->name, session_id(), [
+    'expires' => $config->cookies->session->expiry,
+    'path' => $config->cookies->path,
+    'domain' => $config->cookies->domain,
+    'secure' => true,
+    'httponly' => true,
+    'samesite' => 'None',
+]);
 
 // Due to the fact that we are using multiple sub-domains, we must enable Cross-Origin-Resource-Sharing (CORS) for our entire domain.
 if (isset($_SERVER['HTTP_ORIGIN'])) {
