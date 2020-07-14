@@ -10,7 +10,7 @@
 require "sessions.php";
 
 if (isset($_POST["user"]) and isset($_POST["answer"])) {
-    if (!isset($_SESSION["username"]) or $_SESSION["username"] != $_GET["user"]) {
+    if (!isset($_SESSION["username"]) or $_SESSION["username"] != $_POST["user"]) {
         if (isset($_SESSION["challenge_answer"]) and isset($_SESSION["challenge_question"]) and isset($_SESSION["challenge_user"]) and strtolower($_SESSION["challenge_user"]) == strtolower($_POST["user"])) {
             $matches = [];
             if (preg_match("/#I, ([a-z0-9\.\-]{3,16}), a user of the hive blockchain wish to sign in to the '([a-zA-Z0-9 ]{1,32})' application made by '([a-z0-9\.\-]{3,16})'. Please log me into this session with the random value of ([a-f0-9]{100})/", $_POST["answer"], $matches)) {
