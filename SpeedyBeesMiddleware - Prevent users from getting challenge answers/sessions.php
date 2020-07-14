@@ -35,19 +35,19 @@ setcookie($config->cookies->session->name, session_id(), [
 // Due to the fact that we are using multiple sub-domains, we must enable Cross-Origin-Resource-Sharing (CORS) for our entire domain.
 if (isset($_SERVER['HTTP_ORIGIN'])) {
     // Split Host Name into portions
-    $host_names = explode(".", $_SERVER["HTTP_ORIGIN"]);
-    if (sizeof($host_names) > 1) {
-        $host_domain = $host_names[count($host_names)-2] . "." . $host_names[count($host_names)-1];
+    $host_names = parse_url($_SERVER["HTTP_ORIGIN"]);
+    if (isset($host_names["host"])) {
+        $host_domain = $host_names["host"];
     } else {
         $host_domain = $_SERVER["HTTP_ORIGIN"];
     }
-
+    
     // Get domain and check if it's ours
     if ($host_domain === $config->app->domain or $host_domain === "http://localhost:3000") {
         // Set CORS headers so browsers can access this page.
         header("Access-Control-Allow-Origin: $_SERVER[HTTP_ORIGIN]");
         header('Access-Control-Allow-Credentials: true');
-        header('Access-Control-Max-Age: 0');    // cache for 1 day
+        header('Access-Control-Max-Age: 0');    // don't cache
         header('Access-Control-Allow-Methods: GET,PUT,POST,DELETE,PATCH,OPTIONS'); // Allow all kinds of requests
         header("Access-Control-Allow-Headers: Origin,X-Requested-With,Content-Type,Accept,Authorisation");
     }
