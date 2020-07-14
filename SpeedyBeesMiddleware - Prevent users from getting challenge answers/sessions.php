@@ -43,7 +43,7 @@ if (isset($_SERVER['HTTP_ORIGIN'])) {
     }
     
     // Get domain and check if it's ours
-    if ($host_domain === $config->app->domain or $host_domain === "http://localhost:3000") {
+    if ($host_domain === $config->app->domain or $host_domain === "localhost") {
         // Set CORS headers so browsers can access this page.
         header("Access-Control-Allow-Origin: $_SERVER[HTTP_ORIGIN]");
         header('Access-Control-Allow-Credentials: true');
