@@ -36,10 +36,10 @@ let history = [ ];
 let clients = [ ];
 dbPool.getConnection(function(err, dbConnection){
     if (err) throw err; // Throw it here because this is startup so the user will be monitoring to see that everything has connected
-    dbConnection.query("SELECT * FROM `messages`", function(err, result, fields) {
+    dbConnection.query("SELECT * FROM `messages`", function(err, result) {
         if (err) throw err; // If an error happens here, crash the app because it means the table has not been created
-        for (var i=0; i < result.length; i++) { 
-            var db_msg = {
+        for (let i=0; i < result.length; i++) {
+            let db_msg = {
                 from: result[i]._from,
                 to: result[i]._to,
                 content: result[i]._content,
@@ -63,7 +63,7 @@ function stripWhitespace(str) {
 }
 
 // Start with normal server
-var server = http.createServer();
+const server = http.createServer();
 
 // Make Server Listen
 server.listen(webSocketsServerPort, function() {
@@ -108,8 +108,8 @@ wsServer.on('request', (request) => {
                 console.log((new Date()) + ": Error Parsing Message From Client");
             }
 
-            if (parsed_message != false) {
-                if ('name' in parsed_message, 'signature' in parsed_message, 'type' in parsed_message, 'data' in parsed_message) {
+            if (parsed_message !== false) {
+                if ('name' in parsed_message && 'signature' in parsed_message && 'type' in parsed_message && 'data' in parsed_message) {
                     
                     // Set default values that are not the same so that if it fails, they won't be equal
                     var pubPostingKey = "Posting Key";
@@ -126,7 +126,7 @@ wsServer.on('request', (request) => {
 
                     // If user has proven themselves to be the sender
                     if (pubPostingKey === recoveredPubKey.toString()) {
-                        var parsed_data = false;
+                        let parsed_data = false;
                         try {
                             // If you're reading this, you might be wondering "why isn't data a JSON object"
                             // The reason is that if I stringify data to test the signature, I might stringify it differently than the client did
@@ -157,7 +157,7 @@ wsServer.on('request', (request) => {
                                     userName = parsed_message.name;
 
                                     // Organise data
-                                    var msg = {
+                                    let msg = {
                                         from: parsed_message.name,
                                         to: parsed_data.to,
                                         content: parsed_data.content,
@@ -172,7 +172,7 @@ wsServer.on('request', (request) => {
                                     };
                                     dbPool.getConnection(function(err, dbConnection) {
                                         if (err) console.log((new Date()) + ": Failed to get connection to insert message. Data: " + JSON.stringify(msg));
-                                        dbConnection.query('INSERT INTO `messages` (`_from`, `_to`, `_content`, `_app`, `_extensions`, `_raw_data`, `_signature`, `_signed_data`, `_type`, `_format`, `_timestamp`) VALUES (?,?,?,?,?,?,?,?,?,?,?)', [msg.from, msg.to, msg.content, msg.app, JSON.stringify(msg.extensions), JSON.stringify(JSON.parse(msg.raw_data)),msg.signature, msg.signed_data, msg.type, msg.format, msg.timestamp], function (error, results, fields) {
+                                        dbConnection.query('INSERT INTO `messages` (`_from`, `_to`, `_content`, `_app`, `_extensions`, `_raw_data`, `_signature`, `_signed_data`, `_type`, `_format`, `_timestamp`) VALUES (?,?,?,?,?,?,?,?,?,?,?)', [msg.from, msg.to, msg.content, msg.app, JSON.stringify(msg.extensions), JSON.stringify(JSON.parse(msg.raw_data)),msg.signature, msg.signed_data, msg.type, msg.format, msg.timestamp], function (error) {
                                             if (error) console.log((new Date()) + ": Error pushing message to database. Data: " + JSON.stringify(msg));
                                         });
                                         dbConnection.release();
@@ -184,9 +184,9 @@ wsServer.on('request', (request) => {
                                     history.push(msg);
                                     
                                     // Send message to involved parties only
-                                    var json = JSON.stringify({ command: 'message', data: msg });
-                                    for (var i=0; i < clients.length; i++) {
-                                        if (clients[i][1] !== false && (clients[i][1] === msg.to || clients[i][1] == msg.from)) {
+                                    let json = JSON.stringify({ command: 'message', data: msg });
+                                    for (let i=0; i < clients.length; i++) {
+                                        if (clients[i][1] !== false && (clients[i][1] === msg.to || clients[i][1] === msg.from)) {
                                             clients[i][0].sendUTF(json);
                                         }
                                     }
@@ -216,7 +216,7 @@ wsServer.on('request', (request) => {
 
                                     dbPool.getConnection(function(err, dbConnection) {
                                         if (err) console.log((new Date()) + ": Failed to get connection to insert message. Data: " + JSON.stringify(msg));
-                                        dbConnection.query('INSERT INTO `messages` (`_from`, `_to`, `_content`, `_app`, `_extensions`, `_raw_data`, `_signature`, `_signed_data`, `_type`, `_format`, `_timestamp`) VALUES (?,?,?,?,?,?,?,?,?,?,?)', [msg.from, msg.to, msg.content, msg.app, JSON.stringify(msg.extensions), JSON.stringify(JSON.parse(msg.raw_data)),msg.signature, msg.signed_data, msg.type, msg.format, msg.timestamp], function (error, results, fields) {
+                                        dbConnection.query('INSERT INTO `messages` (`_from`, `_to`, `_content`, `_app`, `_extensions`, `_raw_data`, `_signature`, `_signed_data`, `_type`, `_format`, `_timestamp`) VALUES (?,?,?,?,?,?,?,?,?,?,?)', [msg.from, msg.to, msg.content, msg.app, JSON.stringify(msg.extensions), JSON.stringify(JSON.parse(msg.raw_data)),msg.signature, msg.signed_data, msg.type, msg.format, msg.timestamp], function (error) {
                                             if (error) console.log((new Date()) + ": Error pushing message to database. Data: " + JSON.stringify(msg));
                                         });
                                         dbConnection.release();
@@ -228,8 +228,8 @@ wsServer.on('request', (request) => {
                                     history.push(msg);
                                     
                                     // Send message to everyone
-                                    var json = JSON.stringify({ command: 'message', data: msg });
-                                    for (var i=0; i < clients.length; i++) {
+                                    let json = JSON.stringify({ command: 'message', data: msg });
+                                    for (let i=0; i < clients.length; i++) {
                                         clients[i][0].sendUTF(json);
                                     }
                                 } else {
@@ -247,7 +247,7 @@ wsServer.on('request', (request) => {
                                     var tmp_history = [];
 
                                     for (var i=0; i < history.length; i++) {
-                                        if (history[i].type == "channel") {
+                                        if (history[i].type === "channel") {
                                             tmp_history.push(history[i]);
                                         } else if (history[i].type === "private" && (history[i].to === parsed_message.name || history[i].from === parsed_message.name)) {
                                             tmp_history.push(history[i])
