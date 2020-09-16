@@ -1,19 +1,20 @@
-// Use strict javascript for security reasons
+// Use Strict
 "use strict";
 
-// Run the web socket on port 443, so if you're on a restricted network, it just looks like a normal website over TLS.
-var webSocketsServerPort = 443;
+// Imports
+const webSocketServer = require('websocket').server;
+const http = require('http');
+const mysql = require('mysql');
+const { Client, Signature, cryptoUtils } = require('@hiveio/dhive');
 
-// Import required webservers
-var webSocketServer = require('websocket').server;
-var https = require('https');
-var mysql = require('mysql');
-var fs = require('fs');
-const { Client, Signature, cryptoUtils } = require('dsteem');
+// Runs on port 9980 - caddy does ssl and forwards it to the internet on 80 and 443
+let webSocketsServerPort = 9980;
 
-const hiveClient = new Client('https://anyx.io');
+// Connection to the hive network (for verifying signatures to keys)
+const hiveClient = new Client(["https://api.deathwing.me", "https://api.hive.blog", "https://api.hivekings.com", "https://anyx.io", "https://api.openhive.network"]);
 
-var dbPool = mysql.createPool({
+// database pool
+const dbPool = mysql.createPool({
     connectionLimit: 100,
     host: "localhost",
     user: "root",
@@ -30,9 +31,9 @@ dbPool.getConnection(function(err, dbConnection) {
 });
 
 // All messages (as server is shared), allows for reduced querying (only one select at the program startup, making it more efficient)
-var history = [ ];
+let history = [ ];
 // list of currently connected users
-var clients = [ ];
+let clients = [ ];
 dbPool.getConnection(function(err, dbConnection){
     if (err) throw err; // Throw it here because this is startup so the user will be monitoring to see that everything has connected
     dbConnection.query("SELECT * FROM `messages`", function(err, result, fields) {
@@ -61,13 +62,8 @@ function stripWhitespace(str) {
     return String(str).replace(/(^\s+|\s+$)/g, "");
 }
 
-const options = {
-    key: fs.readFileSync('./private.key'),
-    cert: fs.readFileSync('./certificate.cer')
-}
-
 // Start with normal server
-var server = https.createServer(options, function(request, response) {});
+var server = http.createServer();
 
 // Make Server Listen
 server.listen(webSocketsServerPort, function() {

@@ -4,12 +4,14 @@
   "description": "dMessages Backend Server",
   "main": "chat-server.js",
   "dependencies": {
-    "dsteem": "^0.11.3",
+    "@hiveio/dhive": "^0.14.1",
     "mysql": "^2.18.1",
+    "uWebSockets.js": "uNetworking/uWebSockets.js#18.4.0",
     "websocket": "^1.0.31"
   },
   "devDependencies": {},
   "scripts": {
+    "start": "node .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

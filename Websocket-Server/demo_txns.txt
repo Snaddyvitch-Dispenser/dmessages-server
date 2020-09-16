@@ -1,4 +1,0 @@
-"{"name": "cadawg", "signature":"20263e4e6b69ba04be8869ed9a3d76bffe4c6d90f709998f8ed921b04b4b0d1fd204bc48758c59c9a9e56654c17519abf45617f92293520522bab1b906b7a62917","type":"login","data":"{\"expires\":\"1591113226\", \"message\": \"Please sign me into dMessages\"}"}"
-
-{"name": "cadawg","signature":"206cd1f835f5bb78a6e0b3ce1a3b09e5570e39b7544712cef6dbe2adf374bac1544b1e905b46026d3c910d5b11540a0cc0e5894567a4fefc586c6da8ed872c9bce","type":"send_channel_message","data":"{\"format\":\"plaintext\",\"expires\":\"1591113226\",\"extensions\":[],\"app\":\"dmessages/v0.0.1\",\"to\":\"general\",\"content\":\"hi!\"}"}
-
