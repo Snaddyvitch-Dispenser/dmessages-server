@@ -21,7 +21,10 @@ const dbPool = mysql.createPool({
 const messageLoader = new MessageLoader("en");
 const channelManager = new ChannelManager(dbPool, hiveClient, messageLoader);
 
-channelManager.create("generally bad", "cadawg", "STM5nmQQwce8CYdutL1cWCBdvAU5YWDVt9aN2wdqwncEM1AB86Yi2");
+channelManager.create("CA's Kingdom", "cadawg", "STM5U4gP8VJuc42pXRSfESWtyKL8UbkatcE29HHdmDoMECzUUr2yE")
+    .then(function (result) {
+        console.log(result);
+    });
 
 
 // format:

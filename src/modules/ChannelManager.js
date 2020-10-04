@@ -11,25 +11,40 @@ class ChannelManager {
         this.messageLoader = messageLoader;
     }
 
-    async create(name, owner, decryptionKeyPublic) {
+    async uploadInvite(private_key_encrypted, invite_link_hash) {
+
+    }
+
+    async create(name, owner, public_key) {
+        owner = owner.toLowerCase();
+
+        // Check PublicKey is Valid.
         try {
-            PublicKey.fromString(decryptionKeyPublic);
+            PublicKey.fromString(public_key);
         } catch (e) {
-            return [false, this.messageLoader.getMessage("CHANNEL_PK_NOT_VALID")];
+            return [false, "@CHANNEL_CREATE_PK_NOT_VALID"];
         }
 
+        // Check owner exists
         try {
             let accountData = await this.client.database.getAccounts([owner]);
-            if (accountData[0].name !== owner.toLowerCase()) {
-                return [false, this.messageLoader.getMessage("CHANNEL_OWNER_NOT_MATCH")]
+            if (accountData[0].name !== owner) {
+                return [false, "@CHANNEL_CREATE_OWNER_NOT_MATCH"]
             }
         } catch (e) {
-            return [false, this.messageLoader.getMessage("CHANNEL_OWNER_ERROR_FIND")]
+            return [false, "@CHANNEL_CREATE_OWNER_ERROR_FIND"]
         }
 
-        /*this.dbPool.query('INSERT INTO `messages` (`_from`, `_to`, `_content`, `_app`, `_extensions`, `_raw_data`, `_signature`, `_signed_data`, `_type`, `_format`, `_timestamp`) VALUES (?,?,?,?,?,?,?,?,?,?,?)', [msg.from, msg.to, msg.content, msg.app, JSON.stringify(msg.extensions), JSON.stringify(JSON.parse(msg.raw_data)),msg.signature, msg.signed_data, msg.type, msg.format, msg.timestamp], function (error) {
-            if (error) console.log((new Date()) + ": Error pushing message to database. Data: " + JSON.stringify(msg));
-        });*/
+        // Check name isn't empty or too big
+        if (name.length === 0) return [false, "@CHANNEL_CREATE_EMPTY_NAME"]
+        if (name.length > 50) return [false, "@CHANNEL_CREATE_LONG_NAME"]
+
+
+        await this.dbPool.query('INSERT INTO `channels` (`name`, `owner`, `public_key`) VALUES (?, ?, ?)', [name, owner, public_key], function (err) {
+            if (err) return [false, "@CHANNEL_CREATE_ERROR_SQL"];
+
+            return [true, "@CHANNEL_CREATE_SUCCESS"];
+        });
     }
 }
 
