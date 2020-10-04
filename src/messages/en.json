@@ -1,0 +1,5 @@
+{
+  "CHANNEL_PK_NOT_VALID": "The public encryption key your browser sent us doesn't appear to be valid. Please Try again or contact us!",
+  "CHANNEL_OWNER_NOT_MATCH": "The channel owner doesn't exist or match Hive records. Please try again or contact us!",
+  "CHANNEL_OWNER_ERROR_FIND": "We encountered an error whilst trying to find the owner, this could mean the nodes we use are down."
+}

@@ -2,16 +2,17 @@
   "name": "dmessages-server",
   "version": "1.0.0",
   "description": "dMessages Backend Server",
-  "main": "chat-server.js",
+  "main": "src/index.js",
   "dependencies": {
     "@hiveio/dhive": "^0.14.1",
+    "esm": "^3.2.25",
     "mysql": "^2.18.1",
     "uWebSockets.js": "uNetworking/uWebSockets.js#18.4.0",
     "websocket": "^1.0.31"
   },
   "devDependencies": {},
   "scripts": {
-    "start": "node .",
+    "start": "node -r esm src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
