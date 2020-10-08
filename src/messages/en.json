@@ -5,5 +5,9 @@
   "CHANNEL_CREATE_EMPTY_NAME": "We can't create channels with empty names, sorry!",
   "CHANNEL_CREATE_LONG_NAME": "You can't have a channel name which is more than 50 characters, sorry!",
   "CHANNEL_CREATE_ERROR_SQL": "Error Saving Channel. Please Try Again Later.",
-  "CHANNEL_CREATE_SUCCESS": "Successfully created channel!"
+  "CHANNEL_CREATE_SUCCESS": "Successfully created channel!",
+  "INVITE_UPLOAD_FIELD_WRONG_LENGTH": "Sorry, this invite has an invalid field (by length/formatting) this is likely a programming error. Please contact us!",
+  "INVITE_UPLOAD_HASH_WRONG": "The Invite Hash You've provided seems to be wrong. Try regenerating it and if it still doesn't work, contact us!",
+  "INVITE_UPLOAD_ERROR_FIND_CREATOR": "We couldn't find the link's creator on Hive, either hive is down or you don't exist 😲 (or I wrote some bad code)",
+  "INVITE_UPLOAD_ERROR_EXPIRES": "This invite has already expired or isn't a date."
 }

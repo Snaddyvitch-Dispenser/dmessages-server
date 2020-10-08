@@ -11,12 +11,7 @@ class MessageLoader {
     }
 
     getMessage(identifier) {
-        if (this.messages.hasOwnProperty(identifier)){
-            return this.messages[identifier];
-        } else {
-            console.error("This Message Identifier doesn't correspond to a message in the Language File.");
-            return "Message Missing. Please Let us Know! Identifier: " + identifier.toString();
-        }
+        return this.messages[identifier] || "Message Missing. Please Let us Know! Identifier: " + identifier.toString();
     }
 }
 

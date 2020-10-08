@@ -4,6 +4,8 @@ Channel Private Key:
 Channel Public Key:
 STM5U4gP8VJuc42pXRSfESWtyKL8UbkatcE29HHdmDoMECzUUr2yE
 
-Invite Link:
-Hash:
-Encrypted:
+Invite Link: 9ASa553CTTB5SbV2uzErVZiiw3t7qkpt2h8xSMgQz2Go
+Hash (512) Hex: 1fe11f6e5de4f6661021f4ec05e87fccce15e8a236b9bfe60a02e1764e5e59b2d00334c0fa3127f2c197618e1e8fc917755314e1d391fbc93d6b18662b90932c
+Encrypted: 1009dcefb9cca4931ce2e389a23bad651bc2a23ed59f66d8efba49e61199451e131ed90b8c41d537f4161b88be2a1c518dc040
+Auth Tag: 30dfe8ab4f36f724765938563f1cd482
+IV: a0940f826c27d5e904eaf043d7ab343f
