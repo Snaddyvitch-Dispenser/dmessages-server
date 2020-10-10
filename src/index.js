@@ -2,14 +2,14 @@ import uWebSockets from 'uWebSockets.js';
 const webSocketsServerPort = 9980;
 import ChannelManager from "./modules/ChannelManager";
 import {Client} from "@hiveio/dhive";
-import mysql from "mysql";
+import mysql from "mysql2";
 import MessageLoader from "./messages/MessageLoader";
 
 // Connection to the hive network (for verifying signatures to keys)
 const hiveClient = new Client(["https://api.deathwing.me", "https://api.hive.blog", "https://api.hivekings.com", "https://anyx.io", "https://api.openhive.network"]);
 
 // database pool
-const dbPool = mysql.createPool({
+const dbPoolSync = mysql.createPool({
     connectionLimit: 100,
     host: "localhost",
     user: "root",
@@ -18,13 +18,19 @@ const dbPool = mysql.createPool({
     charset: "utf8mb4"
 });
 
-const messageLoader = new MessageLoader("en");
-const channelManager = new ChannelManager(dbPool, hiveClient, messageLoader);
+const dbPool = dbPoolSync.promise();
 
-channelManager.create("CA's Kingdom", "cadawg", "STM5U4gP8VJuc42pXRSfESWtyKL8UbkatcE29HHdmDoMECzUUr2yE")
+const messageLoader = new MessageLoader("en");
+const channelManager = ChannelManager.getManager(dbPool, hiveClient, messageLoader);
+
+channelManager.getById(393536498156568576).then(r => console.log(r))
+
+/*channelManager.create("CA's Kingdom", "cadawg", "STM5U4gP8VJuc42pXRSfESWtyKL8UbkatcE29HHdmDoMECzUUr2yE")
     .then(function (result) {
-        console.log(result);
-    });
+        console.log("they tryna be lamp", result);
+    });*/
+
+
 
 
 // format:

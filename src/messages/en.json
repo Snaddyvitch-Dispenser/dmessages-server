@@ -9,5 +9,8 @@
   "INVITE_UPLOAD_FIELD_WRONG_LENGTH": "Sorry, this invite has an invalid field (by length/formatting) this is likely a programming error. Please contact us!",
   "INVITE_UPLOAD_HASH_WRONG": "The Invite Hash You've provided seems to be wrong. Try regenerating it and if it still doesn't work, contact us!",
   "INVITE_UPLOAD_ERROR_FIND_CREATOR": "We couldn't find the link's creator on Hive, either hive is down or you don't exist 😲 (or I wrote some bad code)",
-  "INVITE_UPLOAD_ERROR_EXPIRES": "This invite has already expired or isn't a date."
+  "INVITE_UPLOAD_ERROR_EXPIRES": "This invite has already expired or isn't a date.",
+  "INVITE_UPLOAD_EXPIRE": "This invite has already expired.",
+  "INVITE_UPLOAD_ENCRYPTED_WRONG": "This invite wasn't encoded properly after encryption or some data was lost. Please try again.",
+  "INVITE_UPLOAD_EXTRA_BYTES_MISSING": "You didn't send extra bytes, these are needed for security reasons. Please try again."
 }

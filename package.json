@@ -7,6 +7,7 @@
     "@hiveio/dhive": "^0.14.1",
     "esm": "^3.2.25",
     "mysql": "^2.18.1",
+    "mysql2": "^2.2.5",
     "uWebSockets.js": "uNetworking/uWebSockets.js#18.4.0",
     "websocket": "^1.0.31"
   },
