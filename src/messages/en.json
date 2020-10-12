@@ -12,5 +12,8 @@
   "INVITE_UPLOAD_ERROR_EXPIRES": "This invite has already expired or isn't a date.",
   "INVITE_UPLOAD_EXPIRE": "This invite has already expired.",
   "INVITE_UPLOAD_ENCRYPTED_WRONG": "This invite wasn't encoded properly after encryption or some data was lost. Please try again.",
-  "INVITE_UPLOAD_EXTRA_BYTES_MISSING": "You didn't send extra bytes, these are needed for security reasons. Please try again."
+  "INVITE_UPLOAD_EXTRA_BYTES_MISSING": "You didn't send extra bytes, these are needed for security reasons. Please try again.",
+  "INVITE_UPLOAD_SUCCESS": "Invite created.",
+  "INVITE_SQL_FAIL": "Couldn't connect to the database to insert invite. Please try again with a new link",
+  "INVITE_UPLOAD_CHANNEL_NOT_EXIST": "Channel doesn't exist."
 }

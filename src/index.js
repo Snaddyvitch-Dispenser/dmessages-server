@@ -4,6 +4,7 @@ import ChannelManager from "./modules/ChannelManager";
 import {Client} from "@hiveio/dhive";
 import mysql from "mysql2";
 import MessageLoader from "./messages/MessageLoader";
+import UserManager from "./modules/UserManager";
 
 // Connection to the hive network (for verifying signatures to keys)
 const hiveClient = new Client(["https://api.deathwing.me", "https://api.hive.blog", "https://api.hivekings.com", "https://anyx.io", "https://api.openhive.network"]);
@@ -20,17 +21,19 @@ const dbPoolSync = mysql.createPool({
 
 const dbPool = dbPoolSync.promise();
 
-const messageLoader = new MessageLoader("en");
-const channelManager = ChannelManager.getManager(dbPool, hiveClient, messageLoader);
+const channelManager = ChannelManager.getManager(dbPool, hiveClient);
+const userManager = UserManager.getManager(dbPool, hiveClient);
 
-channelManager.getById(393536498156568576).then(r => console.log(r))
+//userManager.getUserByName("cadawg").then(r => console.log(r.getAuthorityKeys("active"), r.getAuthorityKeys("posting"), r.getAuthorityKeys("owner"), r.getAuthorityKeys("memo")));
+
+//channelManager.getById(393536498156568576).then(r => console.log(r))
 
 /*channelManager.create("CA's Kingdom", "cadawg", "STM5U4gP8VJuc42pXRSfESWtyKL8UbkatcE29HHdmDoMECzUUr2yE")
     .then(function (result) {
         console.log("they tryna be lamp", result);
     });*/
 
-
+channelManager.getChannelById(393536498156568576).then(r => console.log("lol", r.owner.name, r.owner.id));
 
 
 // format:
