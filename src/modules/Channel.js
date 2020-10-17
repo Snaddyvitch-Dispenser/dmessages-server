@@ -22,6 +22,10 @@ class Channel {
         this.client = client;
     }
 
+    getId() {
+        return BigInt(this.id).toString();
+    }
+
     static async getChannel({id, name, owner, public_key}, dbPool, client) {
         let userManager = UserManager.getManager(dbPool, client);
         owner = await userManager.getUserByName(owner);

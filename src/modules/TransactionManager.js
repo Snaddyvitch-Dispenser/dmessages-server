@@ -1,20 +1,31 @@
 import BaseManager from "./BaseManager";
+import UserManager from "./UserManager";
+import { PublicKey, Signature, cryptoUtils } from "@hiveio/dhive";
+import Transaction from "./Transaction";
 
 class TransactionManager extends BaseManager {
-    async isSignedBy(signatures, key, user) {
-        // TODO: Historic Key Caching
-        // IDK Maybe this should be part of a TransactionManager
+    constructor(dbPool, client) {
+        super(dbPool, client);
+        this.userManager = UserManager.getManager(dbPool, client);
+    }
+
+    async fromWebsocket(transaction, received_at) {
+        return await Transaction.fromWebsocket(transaction, received_at, this.dbPool, this.client);
     }
 }
+
+export default TransactionManager;
 
 /*
 {
   "nonce": 1, // always incrementing number, unique per-user.
+  "send_time": 23895298579825,
+  "expires_in": 1200,
   "operations": [
     [
       "upload_invite",
       {
-        "channel": 314253290850782635832576,
+        "channel": "314253290850782635832576", // JSON Fucking Hates BigIntegers so use strings instead
         "link_hash": "",
 		"extensions": []
       }

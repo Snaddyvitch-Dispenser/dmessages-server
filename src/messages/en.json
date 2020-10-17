@@ -15,5 +15,12 @@
   "INVITE_UPLOAD_EXTRA_BYTES_MISSING": "You didn't send extra bytes, these are needed for security reasons. Please try again.",
   "INVITE_UPLOAD_SUCCESS": "Invite created.",
   "INVITE_SQL_FAIL": "Couldn't connect to the database to insert invite. Please try again with a new link",
-  "INVITE_UPLOAD_CHANNEL_NOT_EXIST": "Channel doesn't exist."
+  "INVITE_UPLOAD_CHANNEL_NOT_EXIST": "Channel doesn't exist.",
+  "SIGNATURE_USER_KEY_NOT_EXIST": "We couldn't find the User Specified to verify this transaction.",
+  "SIGNATURE_NOT_DECODE": "A signature couldn't be decoded.",
+  "SIGNATURE_KEYS_NOT_MEET_THRESHOLD": "Your account is multi signature, and you haven't provided enough signatures to prove ownership.",
+  "TRANSACTION_NO_SIGNERS": "We couldn't read any of the operations to find signers, so this transaction was dropped.",
+  "TRANSACTION_ERROR": "Error processing transaction. Please try again.",
+  "RECEIVED_TOO_LATE": "This transaction took over 20 Minutes to be received by the server, so we can't send it. Please resend it.",
+  "TRANSACTION_NONCE_USER_NONE": "We couldn't work out what user some of the operations belong to, and so we can't work out your next nonce."
 }

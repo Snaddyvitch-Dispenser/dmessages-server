@@ -17,38 +17,48 @@ class User {
         return "User " + this.json.name + " (id " + this.json.id + ")";
     }
 
+    // TODO: This shouldn't be needed if we're streaming updates live from the chain.
     async updateFromHive() {
         let accountData = await this.client.database.getAccounts([this.json.name]);
         if (accountData[0] && accountData[0].name === this.json.name) {
-            await this.dbPool.query("UPDATE `users` SET ? WHERE name = ?", [{json: JSON.stringify(accountData[0]), id: accountData[0].id, name: accountData[0].name}, accountData[0].name]);
+            try {
+                await this.dbPool.query("UPDATE `users` SET ? WHERE name = ?", [{json: JSON.stringify(accountData[0]), id: accountData[0].id, name: accountData[0].name}, accountData[0].name]);
 
-            let [users] = await this.dbPool.query("SELECT * FROM `users` WHERE name=?", [this.json.name]);
-            if (users.length === 1) {
-                this.json = accountData[0];
-                return true;
+                let [users] = await this.dbPool.query("SELECT * FROM `users` WHERE name=?", [this.json.name]);
+                if (users.length === 1) {
+                    this.json = accountData[0];
+                    return true;
+                }
+            } catch (e) {
+                return false;
             }
         }
 
         return false;
     }
 
+    async getNextNonce() {
+        // TODO: Add to database properly
+        try {
+            let [data] = await this.dbPool.query("SELECT COALESCE(MAX(nonce),-1)+1 as nonce FROM `transactions` WHERE user_for_nonce=?", [this.json.name]);
+            return data[0]["nonce"];
+        } catch (e) {
+            return false;
+        }
+    }
+
     getAuthorityKeys(authority = "posting") {
+        authority = authority.toLowerCase();
         if (authority === "memo") {
             return [this.json.memo_key];
         } else {
-            let threshold = this.json[authority].weight_threshold;
-            let keys = [];
-            for (let auth in this.json[authority].key_auths) {
-                if (this.json[authority].key_auths.hasOwnProperty(auth)) {
-                    let key_data = this.json[authority].key_auths[auth];
-                    if (key_data[1] >= threshold) {
-                        keys.push(key_data[0]); // add valid key
-                    }
-                }
-            }
-
-            return keys;
+            return this.json[authority].key_auths;
         }
+    }
+
+    getKeyThreshold(authority = "posting") {
+        authority = authority.toLowerCase();
+        return this.json[authority].weight_threshold;
     }
 
     static async fromName(name, dbPool, client) {
