@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "dMessages Backend Server",
   "main": "src/index.js",
+  "type": "module",
   "dependencies": {
     "@hiveio/dhive": "^0.14.1",
     "esm": "^3.2.25",
@@ -13,7 +14,7 @@
   },
   "devDependencies": {},
   "scripts": {
-    "start": "node -r esm src/index.js",
+    "start": "node --trace-warnings .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

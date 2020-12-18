@@ -1,9 +1,9 @@
 import {PublicKey} from "@hiveio/dhive";
-import getCurrentEpoch from "./getCurrentEpoch";
+import getCurrentEpoch from "./getCurrentEpoch.js";
 import crypto from 'crypto';
-import Channel from './Channel';
-import UserManager from "./UserManager";
-import BaseManager from "./BaseManager";
+import Channel from './Channel.js';
+import UserManager from "./UserManager.js";
+import BaseManager from "./BaseManager.js";
 
 class ChannelManager extends BaseManager {
     userManager;

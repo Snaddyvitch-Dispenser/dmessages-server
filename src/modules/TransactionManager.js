@@ -1,7 +1,7 @@
-import BaseManager from "./BaseManager";
-import UserManager from "./UserManager";
+import BaseManager from "./BaseManager.js";
+import UserManager from "./UserManager.js";
 import { PublicKey, Signature, cryptoUtils } from "@hiveio/dhive";
-import Transaction from "./Transaction";
+import Transaction from "./Transaction.js";
 
 class TransactionManager extends BaseManager {
     constructor(dbPool, client) {

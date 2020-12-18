@@ -1,5 +1,5 @@
-import ChannelManager from "./ChannelManager";
-import UserManager from "./UserManager";
+import ChannelManager from "./ChannelManager.js";
+import UserManager from "./UserManager.js";
 
 class Invite {
     dbPool; client;

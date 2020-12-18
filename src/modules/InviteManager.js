@@ -1,7 +1,7 @@
-import getCurrentEpoch from "./getCurrentEpoch";
-import ChannelManager from "./ChannelManager";
-import Invite from "./Invite";
-import BaseManager from "./BaseManager";
+import getCurrentEpoch from "./getCurrentEpoch.js";
+import ChannelManager from "./ChannelManager.js";
+import Invite from "./Invite.js";
+import BaseManager from "./BaseManager.js";
 
 class InviteManager extends BaseManager {
     channelManager;

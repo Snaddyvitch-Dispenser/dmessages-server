@@ -1,6 +1,4 @@
-import UserManager from "./UserManager";
-
-// TODO: Change Channel to use owner (account object) instead of owner name (maybe?)
+import UserManager from "./UserManager.js";
 
 class Channel {
     id;

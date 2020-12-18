@@ -22,5 +22,7 @@
   "TRANSACTION_NO_SIGNERS": "We couldn't read any of the operations to find signers, so this transaction was dropped.",
   "TRANSACTION_ERROR": "Error processing transaction. Please try again.",
   "RECEIVED_TOO_LATE": "This transaction took over 20 Minutes to be received by the server, so we can't send it. Please resend it.",
-  "TRANSACTION_NONCE_USER_NONE": "We couldn't work out what user some of the operations belong to, and so we can't work out your next nonce."
+  "TRANSACTION_NONCE_USER_NONE": "We couldn't work out what user some of the operations belong to, and so we can't work out your next nonce.",
+  "NOT_A_WRAPPED_TRANSACTION": "This transaction is not in the correct format for us to be able to respond to it. Rejected.",
+  "TRANSACTION_ERROR_BAD_JSON": "Couldn't decode this transaction. Is it valid JSON?"
 }

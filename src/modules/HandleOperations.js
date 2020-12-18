@@ -1,12 +1,12 @@
-import {OperationLogIn} from "./Transaction";
+import {OperationLogIn} from "./Transaction.js";
 
-function HandleOperations (transaction, operationResponses) {
+function HandleOperations (transaction, operationResponses, ws) {
     let responseTransaction = [];
 
     for (let o = 0; o < transaction.operations.length; o++) {
         let op = transaction.operations[o];
         if (op instanceof OperationLogIn) {
-            responseTransaction = [...responseTransaction, ...operationResponses.loginResponse(op)];
+            responseTransaction = [...responseTransaction, ...operationResponses.loginResponse(op, ws)];
         }
     }
 }

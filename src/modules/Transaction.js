@@ -1,8 +1,6 @@
-import UserManager from "./UserManager";
-import TransactionVerifier from "./TransactionVerifier";
-import getCurrentEpoch from "./getCurrentEpoch";
-
-const OPERATION_MAPPINGS = {"login": OperationLogIn};
+import UserManager from "./UserManager.js";
+import TransactionVerifier from "./TransactionVerifier.js";
+import getCurrentEpoch from "./getCurrentEpoch.js";
 
 class OperationLogIn {
     constructor(data, generatedData) {
@@ -44,22 +42,37 @@ class OperationUnknown {
     }
 }
 
+// MUST BE AFTER OPERATIONS OR ELSE JS GETS PISSED
+const OPERATION_MAPPINGS = {"login": OperationLogIn};
+
 class Transaction {
-    constructor(operations, transaction, signatures, dbPool, client) {
+    constructor(operations, transaction, signatures, id, dbPool, client) {
         this.operations = operations;
         this.transaction = transaction;
         this.signatures = signatures;
+        this.id = id;
         this.dbPool = dbPool;
         this.client = client;
     }
 
-    static async fromWebsocket(transaction, receivedAt = 0, dbPool, client) {
+    static async fromWebsocket(wrappedTransaction, receivedAt = 0, dbPool, client) {
         let transactionVerifier = TransactionVerifier.getVerifier(dbPool, client);
+
+        let id, transaction;
+
+        try {
+            let jsonWrappedTransaction = JSON.parse(wrappedTransaction);
+            if (!jsonWrappedTransaction.hasOwnProperty("id") || !jsonWrappedTransaction.hasOwnProperty("data")) return [false, "@NOT_A_WRAPPED_TRANSACTION"]
+            id = jsonWrappedTransaction["id"];
+            transaction = jsonWrappedTransaction["data"];
+
+        } catch (e) {
+            return [false, "@TRANSACTION_ERROR_BAD_JSON"]
+        }
 
         if (receivedAt === 0) receivedAt = getCurrentEpoch();
 
         try {
-            let transaction = JSON.parse(transaction);
             // noinspection JSUnresolvedVariable
             if (transaction.send_time > getCurrentEpoch() - (transaction.expires_in || 1200) || transaction.expires_in === 0) {
                 // noinspection JSUnresolvedVariable
@@ -144,7 +157,7 @@ class Transaction {
 
             // need TODO Something with the new transactions we got (process them)
             // TODO Shouldn't be saved outside of here because we filter out certain ops (login .etc. that have no use other than for tracking)
-            return new Transaction(operations, transaction, signatures, dbPool, client);
+            return [true, new Transaction(operations, transaction, signatures, id, dbPool, client)];
         } catch (e) {
             return [false, "@TRANSACTION_ERROR"]
         }

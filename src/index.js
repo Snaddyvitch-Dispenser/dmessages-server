@@ -1,16 +1,16 @@
 import uWebSockets from 'uWebSockets.js';
 const webSocketsServerPort = 9980;
-import ChannelManager from "./modules/ChannelManager";
+import ChannelManager from "./modules/ChannelManager.js";
 import {Client} from "@hiveio/dhive";
 import mysql from "mysql2";
-import MessageLoader from "./messages/MessageLoader";
-import UserManager from "./modules/UserManager";
-import TransactionManager from "./modules/TransactionManager";
-import getCurrentEpoch from "./modules/getCurrentEpoch";
-import {OperationLogIn} from "./modules/Transaction";
-import HandleOperations from "./modules/HandleOperations";
-import OperationResponses from "./modules/OperationResponses";
-import wrappedError from "./modules/wrappedError";
+import MessageLoader from "./messages/MessageLoader.js";
+import UserManager from "./modules/UserManager.js";
+import TransactionManager from "./modules/TransactionManager.js";
+import getCurrentEpoch from "./modules/getCurrentEpoch.js";
+import HandleOperations from "./modules/HandleOperations.js";
+import OperationResponses from "./modules/OperationResponses.js";
+import wrappedError from "./modules/wrappedError.js";
+import JSONGetID from "./modules/JSONGetID.js";
 
 // Connection to the hive network (for verifying signatures to keys)
 const hiveClient = new Client(["https://api.deathwing.me", "https://api.hive.blog", "https://api.hivekings.com", "https://anyx.io", "https://api.openhive.network"]);
@@ -56,26 +56,29 @@ uWebSockets.App().ws('/*', {
     open: (ws) => {
         ws.subscribe("system");
     },
-
-    // For brevity we skip the other events (upgrade, open, ping, pong, close)
     message: async (ws, message, isBinary) => {
+        // Get JS Message Text
         let messageText = Buffer.from(message).toString();
+        // Current Time
         let receivedAt = getCurrentEpoch();
 
+        // Load Transaction From Websocket
         let transaction = await transactionManager.fromWebsocket(messageText, receivedAt);
 
-        // todo: wrap in {"id": 0, transaction: {...}} so that we can respond to items properly.
-
-        let response = [];
+        // {id: 1, data: {transactions here}}
+        let response;
+        // Transaction 0 contains true/false
         if (!transaction[0]) {
-            // todo: finish wrapped error
-            response = wrappedError(transaction[1]);
+            // Transaction 1 = Error Message
+            response = wrappedError(transaction[1], JSONGetID(messageText));
         } else {
             // Handle all the different operations.
-            response = HandleOperations(transaction[1], operationResponses);
+            // Transaction [1] is a Transaction() Object in this case.
+            response = HandleOperations(transaction[1], operationResponses, ws);
         }
 
-        return response;
+        // Send message back
+        ws.send(response, isBinary, true);
     }
 
 }).listen(webSocketsServerPort, (listenSocket) => {

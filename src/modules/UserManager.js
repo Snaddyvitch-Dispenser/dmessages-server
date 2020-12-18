@@ -1,5 +1,5 @@
-import User from './User';
-import BaseManager from "./BaseManager";
+import User from './User.js';
+import BaseManager from "./BaseManager.js";
 
 class UserManager extends BaseManager {
     async getUserByName(name) {

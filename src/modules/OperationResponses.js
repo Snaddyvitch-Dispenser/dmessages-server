@@ -8,11 +8,12 @@ class OperationResponses {
         return new OperationResponses(dbPool, client);
     }
 
-    loginResponse(operation) {
+    loginResponse(operation, ws) {
         let responseTransaction = [];
 
         // Add Login Approve (Login) Transaction - Will Log Client In
         responseTransaction.push({"type": "login", "data": {"success": true, "name": operation.username}});
+        ws.subscribe("user:" + operation.username);
 
         return responseTransaction;
 

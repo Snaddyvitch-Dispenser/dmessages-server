@@ -1,5 +1,5 @@
 import {cryptoUtils, PublicKey, Signature} from "@hiveio/dhive";
-import UserManager from "./UserManager";
+import UserManager from "./UserManager.js";
 
 class TransactionVerifier {
     constructor(dbPool, client) {
